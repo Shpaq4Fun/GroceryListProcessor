@@ -1,9 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { GroceryData, GeminiGroceryResponse } from './types';
 import { processGroceryList } from './services/geminiService';
 import { InputSection } from './components/InputSection';
 import { GroceryList } from './components/GroceryList';
+import { AlertCircle } from 'lucide-react';
 import { toggleItem } from './logic';
 
 const LOCAL_STORAGE_KEY = 'smartGroceryList_v1';
@@ -68,10 +69,12 @@ const App: React.FC = () => {
     }
   };
 
-  const handleToggleItem = (itemId: string) => {
-    if (!data) return;
-    setData(toggleItem(data, itemId));
-  };
+  const handleToggleItem = useCallback((itemId: string) => {
+    setData((prevData) => {
+      if (!prevData) return prevData;
+      return toggleItem(prevData, itemId);
+    });
+  }, []);
 
   const handleReset = () => {
     // Immediate clear for snappy mobile UX
@@ -126,7 +129,7 @@ const App: React.FC = () => {
           {error && (
             <div className="mt-6 p-4 bg-red-900/20 border border-red-800 rounded-lg text-red-200 text-sm">
               <div className="font-bold mb-1 flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <AlertCircle className="w-4 h-4" />
                 Error
               </div>
               {error}

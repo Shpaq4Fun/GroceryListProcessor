@@ -37,8 +37,10 @@ const grocerySchema: Schema = {
   required: ["categories", "generalNotes"],
 };
 
+// Optimization: Instantiate once
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
 export const processGroceryList = async (rawText: string): Promise<GeminiGroceryResponse> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const model = "gemini-2.5-pro"; // Using the requested model
 
   const aisleOrderString = PREFERRED_AISLE_ORDER.join("\n- ");
@@ -78,13 +80,12 @@ export const processGroceryList = async (rawText: string): Promise<GeminiGrocery
 
     return JSON.parse(text) as GeminiGroceryResponse;
   } catch (error) {
-    console.error("Error processing grocery list:", error);
+    console.error("Error processing grocery list");
     throw error;
   }
 };
 
 export const extractTextFromImage = async (base64Image: string, mimeType: string): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const model = "gemini-3-flash-preview";
   const prompt = "This is a photo of a handwritten grocery list in Polish. Please extract all the items and notes from this image and return them as plain text. Do not add any extra commentary, just the list items.";
 
@@ -106,7 +107,7 @@ export const extractTextFromImage = async (base64Image: string, mimeType: string
 
     return response.text || "";
   } catch (error) {
-    console.error("Error extracting text from image:", error);
+    console.error("Error extracting text from image");
     throw error;
   }
 };

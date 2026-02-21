@@ -7,6 +7,22 @@ interface InputSectionProps {
   isLoading: boolean;
 }
 
+const readFileAsBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        const base64Data = reader.result.split(',')[1];
+        resolve(base64Data);
+      } else {
+        reject(new Error('Failed to read file as string'));
+      }
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+};
+
 export const InputSection: React.FC<InputSectionProps> = ({ onProcess, isLoading }) => {
   const [text, setText] = useState('');
   const [isExtracting, setIsExtracting] = useState(false);
@@ -24,13 +40,9 @@ export const InputSection: React.FC<InputSectionProps> = ({ onProcess, isLoading
 
     setIsExtracting(true);
     try {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64Data = (reader.result as string).split(',')[1];
-        const extractedText = await extractTextFromImage(base64Data, file.type);
-        setText((prev) => (prev ? `${prev}\n${extractedText}` : extractedText));
-      };
-      reader.readAsDataURL(file);
+      const base64Data = await readFileAsBase64(file);
+      const extractedText = await extractTextFromImage(base64Data, file.type);
+      setText((prev) => (prev ? `${prev}\n${extractedText}` : extractedText));
     } catch (error) {
       console.error("Failed to extract text", error);
       alert("Failed to read the image. Please try again.");
@@ -95,10 +107,7 @@ export const InputSection: React.FC<InputSectionProps> = ({ onProcess, isLoading
       >
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
-            <svg className="animate-spin h-5 w-5 text-neutral-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
+            <Loader2 className="animate-spin h-5 w-5 text-neutral-400" />
             Processing...
           </span>
         ) : (

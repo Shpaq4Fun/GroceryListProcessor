@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, RotateCcw } from 'lucide-react';
+import { Plus, RotateCcw, Info } from 'lucide-react';
 import { GroceryData } from '../types';
 import { CategoryAccordion } from './CategoryAccordion';
 import { AddItemForm } from './AddItemForm';
@@ -38,7 +38,7 @@ export const GroceryList: React.FC<GroceryListProps> = ({ data, onToggleItem, on
       {data.generalNotes.length > 0 && (
         <div className="mb-4 p-3 bg-amber-900/20 border border-amber-900/30 rounded-lg">
           <h3 className="text-amber-500 font-bold text-sm mb-2 uppercase tracking-wider flex items-center gap-2">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <Info className="w-4 h-4" />
             Trip Notes
           </h3>
           <ul className="space-y-1">
