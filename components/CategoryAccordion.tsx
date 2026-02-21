@@ -7,7 +7,8 @@ interface CategoryAccordionProps {
   onToggleItem: (itemId: string) => void;
 }
 
-export const CategoryAccordion: React.FC<CategoryAccordionProps> = React.memo(({ category, onToggleItem }) => {
+// Memoized to prevent unnecessary re-renders when other categories change
+export const CategoryAccordion = React.memo(({ category, onToggleItem }: CategoryAccordionProps) => {
   const [isOpen, setIsOpen] = useState(true);
 
   // Calculate stats
