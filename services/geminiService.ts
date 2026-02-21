@@ -40,10 +40,10 @@ const grocerySchema: Schema = {
 // Optimization: Instantiate once
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+const aisleOrderString = PREFERRED_AISLE_ORDER.join("\n- ");
+
 export const processGroceryList = async (rawText: string): Promise<GeminiGroceryResponse> => {
   const model = "gemini-2.5-pro"; // Using the requested model
-
-  const aisleOrderString = PREFERRED_AISLE_ORDER.join("\n- ");
 
   const prompt = `
     You are an expert grocery list organizer.
