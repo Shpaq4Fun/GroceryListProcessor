@@ -11,11 +11,15 @@ const readFileAsBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      if (typeof reader.result === 'string') {
-        const base64Data = reader.result.split(',')[1];
-        resolve(base64Data);
-      } else {
-        reject(new Error('Failed to read file as string'));
+      try {
+        if (typeof reader.result === 'string') {
+          const base64Data = reader.result.split(',')[1];
+          resolve(base64Data);
+        } else {
+          reject(new Error('Failed to read file as string'));
+        }
+      } catch (error) {
+        reject(error);
       }
     };
     reader.onerror = () => reject(reader.error);
