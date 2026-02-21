@@ -6,7 +6,7 @@ interface CategoryAccordionProps {
   onToggleItem: (itemId: string) => void;
 }
 
-export const CategoryAccordion: React.FC<CategoryAccordionProps> = ({ category, onToggleItem }) => {
+export const CategoryAccordion: React.FC<CategoryAccordionProps> = React.memo(({ category, onToggleItem }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   // Calculate stats
@@ -87,4 +87,4 @@ export const CategoryAccordion: React.FC<CategoryAccordionProps> = ({ category, 
       )}
     </div>
   );
-};
+});
