@@ -7,6 +7,22 @@ interface InputSectionProps {
   isLoading: boolean;
 }
 
+const readFileAsBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        const base64Data = reader.result.split(',')[1];
+        resolve(base64Data);
+      } else {
+        reject(new Error('Failed to read file as string'));
+      }
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+};
+
 export const InputSection: React.FC<InputSectionProps> = ({ onProcess, isLoading }) => {
   const [text, setText] = useState('');
   const [isExtracting, setIsExtracting] = useState(false);
@@ -24,13 +40,9 @@ export const InputSection: React.FC<InputSectionProps> = ({ onProcess, isLoading
 
     setIsExtracting(true);
     try {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64Data = (reader.result as string).split(',')[1];
-        const extractedText = await extractTextFromImage(base64Data, file.type);
-        setText((prev) => (prev ? `${prev}\n${extractedText}` : extractedText));
-      };
-      reader.readAsDataURL(file);
+      const base64Data = await readFileAsBase64(file);
+      const extractedText = await extractTextFromImage(base64Data, file.type);
+      setText((prev) => (prev ? `${prev}\n${extractedText}` : extractedText));
     } catch (error) {
       console.error("Failed to extract text", error);
       alert("Failed to read the image. Please try again.");
