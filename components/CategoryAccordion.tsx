@@ -19,6 +19,7 @@ export const CategoryAccordion: React.FC<CategoryAccordionProps> = React.memo(({
     <div className="mb-2 bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden shadow-sm">
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
         className="w-full flex items-center justify-between p-3 bg-neutral-800/50 active:bg-neutral-800 transition-colors"
       >
         <div className="flex items-center gap-2 overflow-hidden">
@@ -31,6 +32,7 @@ export const CategoryAccordion: React.FC<CategoryAccordionProps> = React.memo(({
         </div>
         
         <ChevronDown
+          aria-hidden="true"
           className={`w-5 h-5 text-neutral-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
@@ -40,13 +42,24 @@ export const CategoryAccordion: React.FC<CategoryAccordionProps> = React.memo(({
           {category.items.map((item) => (
             <div
               key={item.id}
+              role="checkbox"
+              aria-checked={item.checked}
+              tabIndex={0}
               onClick={() => onToggleItem(item.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onToggleItem(item.id);
+                }
+              }}
               className={`
-                group flex items-start gap-3 p-3 cursor-pointer transition-colors
+                group flex items-start gap-3 p-3 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-inset
                 ${item.checked ? 'bg-neutral-900/50' : 'hover:bg-neutral-800/30 bg-neutral-900'}
               `}
             >
-              <div className={`
+              <div
+                aria-hidden="true"
+                className={`
                 mt-0.5 w-5 h-5 rounded border flex-shrink-0 flex items-center justify-center transition-all
                 ${item.checked 
                   ? 'bg-neutral-700 border-neutral-700' 
