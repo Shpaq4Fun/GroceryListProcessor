@@ -78,7 +78,7 @@ export const processGroceryList = async (rawText: string): Promise<GeminiGrocery
 
     return JSON.parse(text) as GeminiGroceryResponse;
   } catch (error) {
-    console.error("Error processing grocery list:", error);
+    console.error("Error processing grocery list");
     throw error;
   }
 };
@@ -106,7 +106,7 @@ export const extractTextFromImage = async (base64Image: string, mimeType: string
 
     return response.text || "";
   } catch (error) {
-    console.error("Error extracting text from image:", error);
+    console.error("Error extracting text from image");
     throw error;
   }
 };
