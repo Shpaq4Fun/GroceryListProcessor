@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ChevronDown, Check } from 'lucide-react';
 import { GroceryCategory, GroceryItem } from '../types';
 
 interface CategoryAccordionProps {
@@ -29,14 +30,9 @@ export const CategoryAccordion: React.FC<CategoryAccordionProps> = ({ category, 
           </span>
         </div>
         
-        <svg
+        <ChevronDown
           className={`w-5 h-5 text-neutral-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        />
       </button>
 
       {isOpen && (
@@ -58,9 +54,7 @@ export const CategoryAccordion: React.FC<CategoryAccordionProps> = ({ category, 
                 }
               `}>
                 {item.checked && (
-                  <svg className="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <Check className="w-3.5 h-3.5 text-neutral-400" strokeWidth={3} />
                 )}
               </div>
 
