@@ -5,6 +5,7 @@ import { processGroceryList } from './services/geminiService';
 import { InputSection } from './components/InputSection';
 import { GroceryList } from './components/GroceryList';
 import { AlertCircle } from 'lucide-react';
+import { toggleItem } from './logic';
 
 const LOCAL_STORAGE_KEY = 'smartGroceryList_v1';
 
