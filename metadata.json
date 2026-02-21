@@ -1,0 +1,5 @@
+{
+  "name": "Smart Grocery Sorter",
+  "description": "Transforms messy shopping lists into sorted, aisle-ordered interactive checklists using Gemini 3.0 Pro.",
+  "requestFramePermissions": []
+}
