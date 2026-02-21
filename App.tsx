@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { GroceryData, GeminiGroceryResponse } from './types';
 import { processGroceryList } from './services/geminiService';
 import { InputSection } from './components/InputSection';
@@ -67,21 +67,28 @@ const App: React.FC = () => {
     }
   };
 
-  const handleToggleItem = (itemId: string) => {
-    if (!data) return;
+  const handleToggleItem = useCallback((itemId: string) => {
+    setData((prevData) => {
+      if (!prevData) return prevData;
 
-    const newCategories = data.categories.map(cat => ({
-      ...cat,
-      items: cat.items.map(item => {
-        if (item.id === itemId) {
-          return { ...item, checked: !item.checked };
+      const newCategories = prevData.categories.map((cat) => {
+        const itemIndex = cat.items.findIndex((item) => item.id === itemId);
+        if (itemIndex === -1) {
+          return cat;
         }
-        return item;
-      })
-    }));
 
-    setData({ ...data, categories: newCategories });
-  };
+        const newItems = [...cat.items];
+        newItems[itemIndex] = { ...newItems[itemIndex], checked: !newItems[itemIndex].checked };
+
+        return {
+          ...cat,
+          items: newItems,
+        };
+      });
+
+      return { ...prevData, categories: newCategories };
+    });
+  }, []);
 
   const handleReset = () => {
     // Immediate clear for snappy mobile UX
