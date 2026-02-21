@@ -62,8 +62,12 @@ const App: React.FC = () => {
       };
 
       setData(processedData);
-    } catch (err: any) {
-      setError(err.message || "Something went wrong processing the list.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Something went wrong processing the list.");
+      } else {
+        setError("Something went wrong processing the list.");
+      }
     } finally {
       setIsLoading(false);
     }
