@@ -72,7 +72,23 @@ const App: React.FC = () => {
   const handleToggleItem = useCallback((itemId: string) => {
     setData((prevData) => {
       if (!prevData) return prevData;
-      return toggleItem(prevData, itemId);
+
+      const newCategories = prevData.categories.map((cat) => {
+        const itemIndex = cat.items.findIndex((item) => item.id === itemId);
+        if (itemIndex === -1) {
+          return cat;
+        }
+
+        const newItems = [...cat.items];
+        newItems[itemIndex] = { ...newItems[itemIndex], checked: !newItems[itemIndex].checked };
+
+        return {
+          ...cat,
+          items: newItems,
+        };
+      });
+
+      return { ...prevData, categories: newCategories };
     });
   }, []);
 
