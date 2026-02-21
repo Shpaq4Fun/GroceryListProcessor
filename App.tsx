@@ -4,6 +4,7 @@ import { GroceryData, GeminiGroceryResponse } from './types';
 import { processGroceryList } from './services/geminiService';
 import { InputSection } from './components/InputSection';
 import { GroceryList } from './components/GroceryList';
+import { toggleItem } from './logic';
 
 const LOCAL_STORAGE_KEY = 'smartGroceryList_v1';
 
@@ -69,18 +70,7 @@ const App: React.FC = () => {
 
   const handleToggleItem = (itemId: string) => {
     if (!data) return;
-
-    const newCategories = data.categories.map(cat => ({
-      ...cat,
-      items: cat.items.map(item => {
-        if (item.id === itemId) {
-          return { ...item, checked: !item.checked };
-        }
-        return item;
-      })
-    }));
-
-    setData({ ...data, categories: newCategories });
+    setData(toggleItem(data, itemId));
   };
 
   const handleReset = () => {
